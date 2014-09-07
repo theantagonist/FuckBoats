@@ -26,6 +26,7 @@ function love.load()
       love.graphics.newImage("bitmaps/sail.png"),
    }
 
+
    -- water = {}
    -- water.body = love.physics.newBody(world, 0, waterline, "static")
    -- water.shape = love.physics.newRectangleShape(width, waterline)
@@ -38,6 +39,9 @@ function love.load()
    boat.fixture = love.physics.newFixture(boat.body, boat.shape)
 
    reset_boat()
+
+   bird = {}
+   bird.image = love.graphics.newImage("bitmaps/flamingotest.png")
 
    local squak = love.audio.newSource("sounds/ambient/background.wav")
    squak:setLooping(true)
