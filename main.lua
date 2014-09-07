@@ -1,4 +1,4 @@
-require("AnAl")
+require("AnAL")
 function love.load()
 	live = 1
 	backgroundImage = love.graphics.newImage("bitmaps/background.png")
@@ -16,21 +16,26 @@ function love.load()
 	splash = love.graphics.newImage("bitmaps/splash.png")
 	local p =love.sound.newSoundData("sounds/ambient/background.wav")
 	love.audio.newSource(p, "static"):play()
-	bang = newAnimation(kaboom, 96, 96, 0.1, 0)
+	local fuckroo =love.sound.newSoundData("sounds/ambient/fuckroosters.mp3")
+	love.audio.newSource(fuckroo, "static"):play()
+	bang = newAnimation(kaboom, 96, 96, 1, 12)
+	bang:setMode("bounce")
 
 	--not the finished background image, but that seemed to be missing
 	z = 1
-	ship = 2
-	bird = 1
+	ship = 1
+	bird = 2
 	xbird = 639
 	boatx = 639
 	birdx = 400
 	birdy = 100
 	birdDy = 0
-	health = 3
-
+	health = 0
+	death = 0
 end
-
+function love.update(dt)
+bang:update(dt)
+end
 function love.draw()
 	love.graphics.setColor( 255, 255, 255 )
 	love.graphics.draw(backgroundImage, 0, 0)
@@ -43,6 +48,7 @@ function love.draw()
 	love.graphics.setColor(255, 255, 255)
 	boatx, xboat, yboat = position(boatx, 1, z, 0.75)
 		if ship == 1 then
+		health = 3
 			love.graphics.draw(ship1, xboat, yboat)
 			l = 240
 		else if ship == 2 then
@@ -54,7 +60,7 @@ function love.draw()
 				love.graphics.setColor(255, 255, 255)
 				love.graphics.draw(ship3, xboat, yboat)
 				l = 500
-				z = -3
+				z = -4
 				health = 12
 		end
 	end
@@ -99,24 +105,29 @@ end
 		if ybird >= 425 then
 			local v = 0
 			
-			print(string.format("%d %d %d\n", xbird, xboat, health)) 
+			print(string.format("%d %d %d\n", xbird, xboat, death)) 
 			if xbird - xboat < l and xbird -xboat > 0 then
 				print(string.format("Yes\n"))
 				local boom = love.sound.newSoundData("sounds/impact/impact_explosion.wav")
-				health = health - 1
+				death = death + 1
 				love.audio.newSource(boom, "static"):play()
 				love.graphics.setColor( 255, 255, 255, 255 )
-				bang:draw(xboat-200, yboat-300)
-				
-			if health > 1 then
-				boatx = 639
+				bang:setSpeed(0.001)
+				bang:draw(xboat, yboat)
 			
+				
+			if death > health then
+				boatx = 641
+				ship = ship + 1
+				bird = bird + 1
+				death = 0
+				
 			end
 			else
 				for v = 1, 40 do 
 					love.graphics.setColor( 255, 255, 255, 255 )
 					love.graphics.draw(splash, xbird, ybird - v)
-				end
+			end
 
 				local noise = love.sound.newSoundData("sounds/impact/impact_splash.wav")
 				love.audio.newSource(noise, "static"):play()
@@ -166,17 +177,21 @@ function love.update(dt)
 			if (xbird+10 - x1)/(110 + 5 * ybird - y1) > (x-x1)/(y-y1) -epsilon and (xbird + 10- x1)/(ybird - y1) < (x- x1)/(y - y1) + epsilon then
 				local noise = love.sound.newSoundData("sounds/impact/impact_messy.wav")
 				love.audio.newSource(noise, "static"):play()
-				if bird == 1 then
+				for n = 1, 500 do
+					bang:draw(xbird, ybird)
+				end	
+					if bird == 1 then
 					local patriotism = love.sound.newSoundData("sounds/bird/eagle.wav")
 					love.audio.newSource(patriotism, "static"):play()
 		
- 
-				elseif bird == 4 then
+ 					end
+				if bird == 4 then
 					local albatross = love.sound.newSoundData("sounds/bird/albatross.mp3")
 					love.audio.newSource(albatross, "static"):play()
-				end
-			end
+					end
+		
 				live = 0
+				end
 
 				local s = 0
 				for s = 1, 40 do 
@@ -185,7 +200,7 @@ function love.update(dt)
 			end
 		end
 	end 
-bang:update(dt)
+
 end
 
 function position(x, y, z, s)
