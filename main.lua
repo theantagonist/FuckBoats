@@ -6,14 +6,23 @@ function reset_boat()
    boat.hits = 0
    boat.image = boat_imgs[math.random(#boat_imgs)]
    local w, h = boat.image:getWidth(), boat.image:getHeight()
-
    boat.shape = love.physics.newRectangleShape(w, h)
-   boat.body = love.physics.newBody(world, width, waterline, "dynamic")
 
-   boat.body:setMass(20)
-   boat.body:setGravityScale(0)
+   if boat.body == nil then
+      boat.body = love.physics.newBody(world, width, waterline, "dynamic")
+      boat.body:setMass(20)
+      boat.body:setGravityScale(0)
+      boat.fixture = love.physics.newFixture(boat.body, boat.shape)
+   else
+      boat.fixture:destroy()
+      boat.body:destroy()
+      boat.body = love.physics.newBody(world, width, waterline, "dynamic")
 
-   boat.fixture = love.physics.newFixture(boat.body, boat.shape)
+      boat.body:setMass(20)
+      boat.body:setGravityScale(0)
+      boat.fixture = love.physics.newFixture(boat.body, boat.shape)
+   end
+
 end
 
 function reset_bird()
@@ -113,7 +122,7 @@ function draw_boat()
    boat.body:applyLinearImpulse(-2, 0)
    boat.body:applyForce(0, bounce)
    love.graphics.draw(boat.image, x, y)
-   -- love.graphics.polygon("line", boat.body:getWorldPoints(boat.shape:getPoints()))
+   love.graphics.polygon("line", boat.body:getWorldPoints(boat.shape:getPoints()))
 end
 
 function draw_bird()
@@ -128,9 +137,9 @@ function draw_bird()
    end
 
    bird.body:applyLinearImpulse(-3, 0)
-   -- bird.body:applyForce(0, bounce)
+   bird.body:applyForce(0, bounce)
    love.graphics.draw(bird.image, x, y)
-   -- love.graphics.circle("line", bird.body:getX(),bird.body:getY(), bird.shape:getRadius(), 20)
+   love.graphics.circle("line", bird.body:getX(),bird.body:getY(), bird.shape:getRadius(), 20)
 end
 
 function love.draw()
