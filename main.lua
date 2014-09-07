@@ -3,6 +3,7 @@ function love.load()
 	backgroundImage = love.graphics.newImage("bitmaps/background.png")
 	ship1 = love.graphics.newImage("bitmaps/sail.png")		
 	ship2 = love.graphics.newImage("bitmaps/police.png")
+	ship3 = love.graphics.newImage("bitmaps/ship.png")
 	bang = love.graphics.newImage("bitmaps/explosion.png")
 	flamingo = love.graphics.newImage("bitmaps/flamingotest.png")
 	flamingo_corpse = love.graphics.newImage("bitmaps/flamingo_crash.png")
@@ -12,7 +13,7 @@ function love.load()
 	love.audio.newSource(p, "static"):play()
 	--not the finished background image, but that seemed to be missing
 	z = 1
-	ship = 2
+	ship = 3
 	boatx = 639
 	birdx = 400
 	birdy = 100
@@ -38,9 +39,14 @@ function love.draw()
 			love.graphics.draw(ship2, xboat, yboat)
 			l = 500
 			z = 9
+			else if ship == 3 then
+				love.graphics.setColor(255, 255, 255)
+				love.graphics.draw(ship3, xboat, yboat)
+				l = 500
+				z = 1
 		end
 	end
-			
+end			
 		
 		
 
