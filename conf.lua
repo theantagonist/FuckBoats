@@ -1,4 +1,5 @@
 function love.conf(t)
+	Animations_legacy_support = true
 	t.modules.audio = true
 	t.modules.keyboard = true
 	t.modules.event = true
